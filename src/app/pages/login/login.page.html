@@ -1,0 +1,68 @@
+<ion-content [fullscreen]="true" class="login-page">
+  <div class="bg-overlay"></div>
+
+  <div class="center">
+    <div class="card">
+      <div class="brand">
+        <img src="/assets/icon/favicon.png" alt="logo" class="animate-pulse" />
+        <h1>MiApp</h1>
+      </div>
+
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <ion-item lines="full" class="input-item">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input
+              type="email"
+              placeholder="Correo electrónico"
+              name="email"
+              [(ngModel)]="email"
+              class="custom-input"
+            ></ion-input>
+          </ion-item>
+        </div>
+
+        <div class="form-group">
+          <ion-item lines="full" class="input-item">
+            <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+            <ion-input
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Contraseña"
+              name="password"
+              [(ngModel)]="password"
+              class="custom-input"
+            ></ion-input>
+            <ion-icon
+              [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
+              slot="end"
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+            ></ion-icon>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" type="submit" class="primary animate-button">
+          <span>Iniciar sesión</span>
+        </ion-button>
+
+        <div class="divider">
+          <span>o continúa con</span>
+        </div>
+
+        <div class="social-buttons">
+          <ion-button fill="outline" (click)="loginWithSocial('google')" class="social-button">
+            <ion-icon name="logo-google" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button fill="outline" (click)="loginWithSocial('apple')" class="social-button">
+            <ion-icon name="logo-apple" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div class="actions">
+          <a routerLink="/pages/agregar" class="register-link">Registrarme</a>
+          <a class="forgot" (click)="forgot()">¿Olvidaste tu contraseña?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,152 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar>
+    <ion-title class="ion-text-center">
+      BJJ Academy
+    </ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Buscar técnicas, clases, instructores..." class="custom-searchbar"></ion-searchbar>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment value="tecnicas" class="custom-segment">
+      <ion-segment-button value="tecnicas">
+        <ion-icon name="barbell-outline"></ion-icon>
+        <ion-label>Técnicas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="clases">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label>Clases</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ranking">
+        <ion-icon name="medal-outline"></ion-icon>
+        <ion-label>Ranking</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Sección de Técnicas -->
+  <div>
+    <h2 class="section-title">Técnicas Destacadas</h2>
+    <div class="tecnicas-grid">
+      <ion-card class="tecnica-card">
+        <img src="assets/tecnicas/armbar.jpg" alt="Armbar"/>
+        <ion-card-header>
+          <ion-card-title>Armbar desde Guardia</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-badge color="primary">Principiante</ion-badge>
+          <p class="instructor">Prof. Silva</p>
+        </ion-card-content>
+      </ion-card>
+      <ion-card class="tecnica-card">
+        <img src="assets/tecnicas/triangle.jpg" alt="Triangle"/>
+        <ion-card-header>
+          <ion-card-title>Triangle Choke</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-badge color="primary">Intermedio</ion-badge>
+          <p class="instructor">Prof. Santos</p>
+        </ion-card-content>
+      </ion-card>
+      <ion-card class="tecnica-card">
+        <img src="assets/tecnicas/kimura.jpg" alt="Kimura"/>
+        <ion-card-header>
+          <ion-card-title>Kimura desde Side Control</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-badge color="primary">Avanzado</ion-badge>
+          <p class="instructor">Prof. Martínez</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Sección de Clases -->
+  <div>
+    <h2 class="section-title">Próximas Clases</h2>
+    <ion-list>
+      <ion-item class="clase-item">
+        <ion-label>
+          <h2>Jiu-jitsu Gi - Principiantes</h2>
+          <p>
+            <ion-icon name="person-circle-outline"></ion-icon>
+            Profesor Carlos Silva
+          </p>
+          <p>
+            <ion-icon name="time-outline"></ion-icon>
+            09:00 AM
+          </p>
+          <p>
+            <ion-icon name="location-outline"></ion-icon>
+            Sala Principal
+          </p>
+        </ion-label>
+        <ion-button slot="end" fill="clear">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item class="clase-item">
+        <ion-label>
+          <h2>No-Gi Avanzado</h2>
+          <p>
+            <ion-icon name="person-circle-outline"></ion-icon>
+            Profesor Marcus Santos
+          </p>
+          <p>
+            <ion-icon name="time-outline"></ion-icon>
+            11:00 AM
+          </p>
+          <p>
+            <ion-icon name="location-outline"></ion-icon>
+            Área de Combate
+          </p>
+        </ion-label>
+        <ion-button slot="end" fill="clear">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- Sección de Ranking -->
+  <div>
+    <h2 class="section-title">Top Estudiantes</h2>
+    <ion-list>
+      <ion-item class="ranking-item">
+        <ion-avatar slot="start">
+          <img src="assets/avatars/ana.jpg" alt="Ana García"/>
+        </ion-avatar>
+        <ion-label>
+          <h2>Ana García</h2>
+          <p>Cinturón Morado</p>
+          <p>15 victorias</p>
+        </ion-label>
+        <ion-badge slot="end" color="gold">#1</ion-badge>
+      </ion-item>
+      <ion-item class="ranking-item">
+        <ion-avatar slot="start">
+          <img src="assets/avatars/roberto.jpg" alt="Roberto López"/>
+        </ion-avatar>
+        <ion-label>
+          <h2>Roberto López</h2>
+          <p>Cinturón Marrón</p>
+          <p>23 victorias</p>
+        </ion-label>
+        <ion-badge slot="end" color="silver">#2</ion-badge>
+      </ion-item>
+      <ion-item class="ranking-item">
+        <ion-avatar slot="start">
+          <img src="assets/avatars/maria.jpg" alt="María Sánchez"/>
+        </ion-avatar>
+        <ion-label>
+          <h2>María Sánchez</h2>
+          <p>Cinturón Azul</p>
+          <p>10 victorias</p>
+        </ion-label>
+        <ion-badge slot="end" color="bronze">#3</ion-badge>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
