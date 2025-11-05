@@ -27,7 +27,7 @@ import {
   timeOutline, 
   locationOutline, 
   personCircleOutline, 
-  chevronForwardOutline, trophyOutline, nutritionOutline, arrowForwardOutline, flashOutline, flameOutline, waterOutline, fitnessOutline, playOutline } from 'ionicons/icons';
+  chevronForwardOutline, trophyOutline, nutritionOutline, arrowForwardOutline, flashOutline, flameOutline, waterOutline, fitnessOutline, playOutline, logoInstagram, logoTwitter } from 'ionicons/icons';
 
 @Component({
   selector: 'app-home',
@@ -64,21 +64,21 @@ export class HomePage {
       nivel: 'Principiante',
       categoria: 'Sumisiones',
       descripcion: 'Técnica fundamental de control y sumisión desde la posición de guardia',
-      imagen: 'assets/tecnicas/armbar.jpg'
+      imagen: 'assets/bjj1.jpeg'
     },
     {
       nombre: 'Triangle Choke',
       nivel: 'Intermedio',
       categoria: 'Estrangulaciones',
       descripcion: 'Estrangulación efectiva utilizando las piernas desde la guardia',
-      imagen: 'assets/tecnicas/triangle.jpg'
+      imagen: 'assets/bjj2.jpeg'
     },
     {
       nombre: 'Berimbolo',
       nivel: 'Avanzado',
       categoria: 'Inversiones',
       descripcion: 'Técnica moderna de inversión para tomar la espalda',
-      imagen: 'assets/tecnicas/berimbolo.jpg'
+      imagen: 'assets/bjj3.jpeg'
     }
   ];
 
@@ -92,7 +92,7 @@ export class HomePage {
       carbohidratos: 300,
       grasas: 70,
       tiempo: 30,
-      imagen: 'assets/nutricion/precomp.jpg'
+      imagen: 'assets/nate1.jpeg'
     },
     {
       titulo: 'Recuperación Post-Entreno',
@@ -103,7 +103,7 @@ export class HomePage {
       carbohidratos: 250,
       grasas: 60,
       tiempo: 20,
-      imagen: 'assets/nutricion/recovery.jpg'
+      imagen: 'assets/recovery.jpeg'
     },
     {
       titulo: 'Dieta Limpia',
@@ -114,7 +114,7 @@ export class HomePage {
       carbohidratos: 200,
       grasas: 55,
       tiempo: 25,
-      imagen: 'assets/nutricion/clean.jpg'
+      imagen: 'assets/dieta .jpeg'
     }
   ];
 
@@ -127,7 +127,7 @@ export class HomePage {
       calorias: 450,
       ejercicios: 8,
       descripcion: 'Desarrolla fuerza específica para jiu-jitsu',
-      imagen: 'assets/ejercicio/strength.jpg'
+      imagen: 'assets/fuerza.jpeg'
     },
     {
       nombre: 'Cardio HIIT',
@@ -137,7 +137,7 @@ export class HomePage {
       calorias: 400,
       ejercicios: 6,
       descripcion: 'Mejora tu resistencia cardiovascular',
-      imagen: 'assets/ejercicio/hiit.jpg'
+      imagen: 'assets/fuerza1.jpeg'
     },
     {
       nombre: 'Movilidad y Flexibilidad',
@@ -147,12 +147,12 @@ export class HomePage {
       calorias: 200,
       ejercicios: 10,
       descripcion: 'Aumenta tu rango de movimiento',
-      imagen: 'assets/ejercicio/mobility.jpg'
+      imagen: 'assets/fuerza2.jpeg'
     }
   ];
 
   constructor() {
-    addIcons({trophyOutline,nutritionOutline,barbellOutline,arrowForwardOutline,flashOutline,flameOutline,waterOutline,fitnessOutline,playOutline,personCircleOutline,timeOutline,locationOutline,chevronForwardOutline,calendarOutline,medalOutline,peopleOutline});
+    addIcons({trophyOutline,nutritionOutline,barbellOutline,arrowForwardOutline,flashOutline,flameOutline,waterOutline,fitnessOutline,playOutline,logoInstagram,logoTwitter,personCircleOutline,timeOutline,locationOutline,chevronForwardOutline,calendarOutline,medalOutline,peopleOutline});
   }
 
   segmentChanged(event: any) {
