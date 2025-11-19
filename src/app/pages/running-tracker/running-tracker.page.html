@@ -1,0 +1,99 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Correr KM - Tracker GPS</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Stats Container -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-label">Distancia</div>
+      <div class="stat-value">{{ distancia.toFixed(2) }} km</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tiempo</div>
+      <div class="stat-value">{{ tiempoFormato }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Velocidad</div>
+      <div class="stat-value">{{ velocidad.toFixed(1) }} km/h</div>
+    </div>
+  </div>
+
+  <!-- Map Container -->
+  <div id="map-container" class="map-container">
+    <div id="map" class="map" #mapElement></div>
+  </div>
+
+  <!-- Información de ubicación -->
+  <ion-card class="location-card">
+    <ion-card-header>
+      <ion-card-title>Información GPS</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p *ngIf="ubicacionActual">
+        <strong>Latitud:</strong> {{ ubicacionActual.latitude.toFixed(6) }}
+      </p>
+      <p *ngIf="ubicacionActual">
+        <strong>Longitud:</strong> {{ ubicacionActual.longitude.toFixed(6) }}
+      </p>
+      <p *ngIf="ubicacionActual">
+        <strong>Precisión:</strong> {{ ubicacionActual.accuracy }} m
+      </p>
+      <p *ngIf="ubicacionActual">
+        <strong>Altitud:</strong> {{ ubicacionActual.altitude ? ubicacionActual.altitude.toFixed(2) : 'N/A' }} m
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Controles -->
+  <div class="controls-container">
+    <ion-button 
+      [color]="corriendo ? 'danger' : 'success'" 
+      expand="block" 
+      size="large"
+      (click)="toggleCorrer()"
+      [disabled]="cargando">
+      <ion-icon [name]="corriendo ? 'pause-outline' : 'play-outline'" slot="start"></ion-icon>
+      {{ cargando ? 'Inicializando...' : (corriendo ? 'Pausar' : 'Iniciar') }}
+    </ion-button>
+
+    <ion-button 
+      *ngIf="corriendo || (distancia > 0 && !corriendo)" 
+      color="medium" 
+      expand="block"
+      (click)="detenerYGuardar()">
+      <ion-icon name="stop-outline" slot="start"></ion-icon>
+      Detener y Guardar
+    </ion-button>
+
+    <ion-button 
+      *ngIf="distancia > 0 && !corriendo" 
+      color="warning" 
+      expand="block"
+      (click)="reiniciar()">
+      <ion-icon name="reload-outline" slot="start"></ion-icon>
+      Reiniciar
+    </ion-button>
+  </div>
+
+  <!-- Historial de rutas -->
+  <div class="history-section" *ngIf="historialRutas.length > 0">
+    <h3>Historial de Rutas</h3>
+    <ion-card *ngFor="let ruta of historialRutas; let i = index" class="history-card">
+      <ion-card-content>
+        <p><strong>Ruta {{ i + 1 }}:</strong> {{ ruta.distancia.toFixed(2) }} km - {{ ruta.tiempo }} min</p>
+        <ion-button 
+          size="small" 
+          fill="outline"
+          (click)="mostrarRuta(ruta)">
+          Ver ruta
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

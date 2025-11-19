@@ -1,13 +1,148 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="modern-header">
   <ion-toolbar>
-    <ion-title>agregar</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Agregar Usuarios</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">agregar</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="modern-content">
+  <!-- Formulario de Agregar Usuario -->
+  <div class="form-section">
+    <div class="section-header">
+      <h2>Nuevo Usuario</h2>
+      <p>Completa los datos para registrar un usuario</p>
+    </div>
+
+    <form (ngSubmit)="agregarUsuario()" class="user-form">
+      <!-- Nombre -->
+      <div class="form-group">
+        <ion-label class="form-label">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          Nombre Completo
+        </ion-label>
+        <ion-input
+          [(ngModel)]="formulario.nombre"
+          name="nombre"
+          placeholder="Ej: Juan Pérez"
+          class="modern-input"
+          required>
+        </ion-input>
+      </div>
+
+      <!-- Edad y Estatura -->
+      <div class="form-row">
+        <div class="form-group half-width">
+          <ion-label class="form-label">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            Edad
+          </ion-label>
+          <ion-input
+            [(ngModel)]="formulario.edad"
+            name="edad"
+            type="number"
+            placeholder="20"
+            class="modern-input"
+            required>
+          </ion-input>
+        </div>
+
+        <div class="form-group half-width">
+          <ion-label class="form-label">
+            <ion-icon name="resize-outline" slot="start"></ion-icon>
+            Estatura (cm)
+          </ion-label>
+          <ion-input
+            [(ngModel)]="formulario.estatura"
+            name="estatura"
+            type="number"
+            placeholder="175"
+            class="modern-input"
+            required>
+          </ion-input>
+        </div>
+      </div>
+
+      <!-- Peso -->
+      <div class="form-group">
+        <ion-label class="form-label">
+          <ion-icon name="scale-outline" slot="start"></ion-icon>
+          Peso (kg)
+        </ion-label>
+        <ion-input
+          [(ngModel)]="formulario.peso"
+          name="peso"
+          type="number"
+          placeholder="75.5"
+          class="modern-input"
+          required>
+        </ion-input>
+      </div>
+
+      <!-- Botón Enviar -->
+      <ion-button
+        type="submit"
+        expand="block"
+        size="large"
+        class="submit-btn"
+        [disabled]="!formulario.nombre || !formulario.edad || !formulario.estatura || !formulario.peso">
+        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+        Registrar Usuario
+      </ion-button>
+    </form>
+  </div>
+
+  <!-- Tabla de Usuarios -->
+  <div class="table-section" *ngIf="usuarios.length > 0">
+    <div class="section-header">
+      <h2>Usuarios Registrados ({{ usuarios.length }})</h2>
+      <p>Todos los usuarios registrados en el sistema</p>
+    </div>
+
+    <div class="table-container">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Edad</th>
+            <th>Estatura (cm)</th>
+            <th>Peso (kg)</th>
+            <th>IMC</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let usuario of usuarios; let i = index" class="user-row">
+            <td class="row-number">{{ i + 1 }}</td>
+            <td class="row-name">{{ usuario.nombre }}</td>
+            <td>{{ usuario.edad }}</td>
+            <td>{{ usuario.estatura }}</td>
+            <td>{{ usuario.peso }}</td>
+            <td class="imc-cell">{{ calcularIMC(usuario).toFixed(1) }}</td>
+            <td class="actions-cell">
+              <ion-button
+                size="small"
+                fill="clear"
+                color="danger"
+                (click)="eliminarUsuario(i)"
+                class="delete-btn">
+                <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mensaje vacío -->
+  <div class="empty-state" *ngIf="usuarios.length === 0">
+    <div class="empty-icon">
+      <ion-icon name="people-outline"></ion-icon>
+    </div>
+    <h3>No hay usuarios registrados</h3>
+    <p>Agrega el primer usuario llenando el formulario arriba</p>
+  </div>
 </ion-content>

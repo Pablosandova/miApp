@@ -1,0 +1,340 @@
+:host {
+  --primary-color: #1a237e;
+  --secondary-color: #304ffe;
+  --accent-color: #536dfe;
+  --surface-color: #ffffff;
+  --background-color: #f8f9ff;
+  --text-primary: #1a237e;
+  --text-secondary: #525f7f;
+  --text-light: #8898aa;
+  --success-color: #2dce89;
+  --warning-color: #fb6340;
+  --danger-color: #f5365c;
+  --border-radius: 16px;
+}
+
+ion-header {
+  ion-toolbar {
+    --background: var(--primary-color);
+    
+    ion-title {
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    ion-back-button {
+      --color: white;
+    }
+  }
+}
+
+ion-content {
+  --background: var(--background-color);
+}
+
+.rutina-container {
+  padding: 16px;
+  animation: fadeIn 0.3s ease-in;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+// Tarjeta de información
+.info-card {
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(48, 79, 254, 0.08), rgba(83, 109, 254, 0.05));
+  border: 1px solid rgba(48, 79, 254, 0.15);
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(48, 79, 254, 0.1);
+
+  ion-card-header {
+    padding: 16px;
+
+    ion-card-title {
+      color: var(--secondary-color);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    ion-card-subtitle {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+  }
+
+  ion-card-content {
+    padding: 16px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+      ion-icon {
+        font-size: 24px;
+        color: var(--secondary-color);
+        margin-bottom: 8px;
+      }
+
+      .label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+// Barra de progreso
+.progreso-container {
+  margin-bottom: 24px;
+
+  h3 {
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+
+  .progreso-bar {
+    height: 8px;
+    background: rgba(82, 95, 127, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+
+    .progreso-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+  }
+}
+
+// Tarjeta de ejercicio
+.ejercicio-card {
+  border-radius: 16px;
+  background: var(--surface-color);
+  box-shadow: 0 4px 12px rgba(26, 35, 126, 0.1);
+  border: 1px solid rgba(82, 95, 127, 0.08);
+  margin-bottom: 24px;
+  overflow: hidden;
+
+  ion-card-header {
+    padding: 16px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+
+    ion-card-title {
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    ion-card-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+    }
+  }
+
+  ion-card-content {
+    padding: 20px;
+
+    .descripcion {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: rgba(48, 79, 254, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid var(--secondary-color);
+    }
+
+    .detalles-ejercicio {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+
+      .detalle-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background: rgba(82, 95, 127, 0.05);
+        border-radius: 8px;
+
+        .label {
+          font-weight: 600;
+          color: var(--text-secondary);
+          font-size: 0.9rem;
+        }
+
+        .valor {
+          font-weight: 700;
+          color: var(--secondary-color);
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+}
+
+// Controles
+.controles-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 32px;
+
+  ion-button {
+    --border-radius: 12px;
+    font-weight: 600;
+    min-width: 120px;
+    height: 48px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(48, 79, 254, 0.3);
+    }
+  }
+}
+
+// Pantalla de completado
+.completado-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+
+  .success-card {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(45, 206, 137, 0.08), rgba(45, 206, 137, 0.05));
+    border: 1px solid rgba(45, 206, 137, 0.2);
+    box-shadow: 0 8px 24px rgba(45, 206, 137, 0.15);
+    text-align: center;
+
+    ion-card-content {
+      padding: 32px 24px;
+
+      .success-icon {
+        font-size: 80px;
+        color: var(--success-color);
+        margin-bottom: 16px;
+        animation: scaleIn 0.5s ease;
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      h2 {
+        color: var(--text-primary);
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 16px 0;
+      }
+
+      .resultados-finales {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: 24px 0;
+
+        .resultado-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 16px;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+          .label {
+            font-weight: 600;
+            color: var(--text-secondary);
+          }
+
+          .valor {
+            font-weight: 700;
+            color: var(--success-color);
+            font-size: 1.1rem;
+          }
+        }
+      }
+
+      .mensaje {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 20px 0;
+        font-style: italic;
+      }
+
+      ion-button {
+        --border-radius: 12px;
+        margin-top: 16px;
+        height: 48px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Media queries para responsive
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .detalles-ejercicio {
+    grid-template-columns: 1fr !important;
+  }
+
+  .controles-container {
+    ion-button {
+      flex: 1;
+      min-width: auto;
+    }
+  }
+}

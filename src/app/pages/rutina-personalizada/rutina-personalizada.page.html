@@ -1,0 +1,141 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="volver()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ rutina?.nombre }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="!completado" class="rutina-container">
+    <!-- Información del usuario y rutina -->
+    <ion-card class="info-card">
+      <ion-card-header>
+        <ion-card-title>{{ usuario?.nombre }}</ion-card-title>
+        <ion-card-subtitle>{{ rutina?.tipo }} | {{ rutina?.intensidad }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <ion-icon name="timer-outline"></ion-icon>
+            <span class="label">Duración</span>
+            <span class="value">{{ duracion_minutos }} min</span>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="flame-outline"></ion-icon>
+            <span class="label">Calorías</span>
+            <span class="value">{{ calorias_quemadas }} kcal</span>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="fitness-outline"></ion-icon>
+            <span class="label">Ejercicios</span>
+            <span class="value">{{ ejercicios.length }}</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Progreso de ejercicios -->
+    <div class="progreso-container">
+      <h3>Ejercicio {{ ejercicioActual + 1 }} de {{ ejercicios.length }}</h3>
+      <div class="progreso-bar">
+        <div class="progreso-fill" [style.width.%]="calcularProgreso()"></div>
+      </div>
+    </div>
+
+    <!-- Ejercicio actual -->
+    <ion-card class="ejercicio-card" *ngIf="ejercicios[ejercicioActual]">
+      <ion-card-header>
+        <ion-card-title>{{ ejercicios[ejercicioActual].nombre }}</ion-card-title>
+        <ion-card-subtitle>
+          {{ ejercicios[ejercicioActual].series }} series | {{ ejercicios[ejercicioActual].repeticiones }}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="descripcion">{{ ejercicios[ejercicioActual].descripcion }}</p>
+        <div class="detalles-ejercicio">
+          <div class="detalle-item">
+            <span class="label">Series:</span>
+            <span class="valor">{{ ejercicios[ejercicioActual].series }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="label">Repeticiones:</span>
+            <span class="valor">{{ ejercicios[ejercicioActual].repeticiones }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="label">Descanso:</span>
+            <span class="valor">{{ ejercicios[ejercicioActual].descanso }}s</span>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Controles de entrenamiento -->
+    <div class="controles-container">
+      <ion-button 
+        *ngIf="ejercicioActual > 0"
+        fill="outline" 
+        (click)="ejercicioAnterior()">
+        Anterior
+      </ion-button>
+      <ion-button 
+        *ngIf="!enProgreso"
+        fill="solid" 
+        color="success"
+        (click)="iniciarEntrenamiento()">
+        <ion-icon name="play-outline" slot="start"></ion-icon>
+        Iniciar
+      </ion-button>
+      <ion-button 
+        *ngIf="enProgreso"
+        fill="solid" 
+        color="warning"
+        (click)="pausarEntrenamiento()">
+        <ion-icon name="pause-outline" slot="start"></ion-icon>
+        Pausar
+      </ion-button>
+      <ion-button 
+        *ngIf="ejercicioActual < ejercicios.length - 1"
+        fill="outline" 
+        (click)="siguienteEjercicio()">
+        Siguiente
+      </ion-button>
+      <ion-button 
+        *ngIf="ejercicioActual === ejercicios.length - 1"
+        fill="solid" 
+        color="danger"
+        (click)="finalizarEntrenamiento()">
+        Finalizar
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Pantalla de completado -->
+  <div *ngIf="completado" class="completado-container">
+    <ion-card class="success-card">
+      <ion-card-content>
+        <ion-icon name="checkmark-circle-outline" class="success-icon"></ion-icon>
+        <h2>¡Entrenamiento Completado!</h2>
+        <div class="resultados-finales">
+          <div class="resultado-item">
+            <span class="label">Calorías quemadas:</span>
+            <span class="valor">{{ calorias_quemadas }} kcal</span>
+          </div>
+          <div class="resultado-item">
+            <span class="label">Duración:</span>
+            <span class="valor">{{ duracion_minutos }} minutos</span>
+          </div>
+          <div class="resultado-item">
+            <span class="label">Ejercicios realizados:</span>
+            <span class="valor">{{ ejercicios.length }}</span>
+          </div>
+        </div>
+        <p class="mensaje">¡Excelente trabajo, {{ usuario?.nombre }}! Sigue así para lograr tus objetivos.</p>
+        <ion-button fill="solid" color="secondary" expand="block" (click)="volver()">
+          Volver al inicio
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

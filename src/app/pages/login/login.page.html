@@ -1,68 +1,265 @@
 <ion-content [fullscreen]="true" class="login-page">
-  <div class="bg-overlay"></div>
+  <div class="container">
+    <!-- Logo y título -->
+    <div class="brand-section">
+      <div class="brand-logo">
+        <ion-icon name="checkmark-circle-outline"></ion-icon>
+      </div>
+      <h1 class="brand-title">Elite Performance</h1>
+      <p class="brand-subtitle">Tu entrenador personal</p>
+    </div>
 
-  <div class="center">
-    <div class="card">
-      <div class="brand">
-        <img src="/assets/icon/favicon.png" alt="logo" class="animate-pulse" />
-        <h1>MiApp</h1>
+    <!-- Mensaje de alerta/éxito -->
+    <div *ngIf="mensaje" class="mensaje-container" [class.error]="tipoMensaje === 'error'">
+      <ion-icon [name]="tipoMensaje === 'exito' ? 'checkmark-circle-outline' : 'alert-circle-outline'"></ion-icon>
+      <span>{{ mensaje }}</span>
+    </div>
+
+    <!-- Formulario de LOGIN -->
+    <form *ngIf="!enRegistro" (ngSubmit)="login()" class="form-container">
+      <h2>Iniciar Sesión</h2>
+
+      <!-- Toggle para login con rostro -->
+      <div class="login-method-toggle">
+        <ion-button 
+          [fill]="!loginConRostro ? 'solid' : 'outline'" 
+          (click)="loginConRostro = false"
+          class="method-btn"
+        >
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          Email
+        </ion-button>
+        <ion-button 
+          [fill]="loginConRostro ? 'solid' : 'outline'" 
+          (click)="toggleLoginConRostro()"
+          class="method-btn"
+        >
+          <ion-icon name="scan-outline" slot="start"></ion-icon>
+          Rostro
+        </ion-button>
       </div>
 
-      <form (ngSubmit)="onSubmit()">
+      <!-- Login tradicional con email -->
+      <div *ngIf="!loginConRostro">
         <div class="form-group">
-          <ion-item lines="full" class="input-item">
+          <ion-label class="label-text">Correo Electrónico</ion-label>
+          <ion-item class="form-input">
             <ion-icon name="mail-outline" slot="start"></ion-icon>
             <ion-input
               type="email"
-              placeholder="Correo electrónico"
-              name="email"
-              [(ngModel)]="email"
-              class="custom-input"
+              placeholder="tu@email.com"
+              [(ngModel)]="loginEmail"
+              name="loginEmail"
             ></ion-input>
           </ion-item>
         </div>
 
         <div class="form-group">
-          <ion-item lines="full" class="input-item">
+          <ion-label class="label-text">Contraseña</ion-label>
+          <ion-item class="form-input">
             <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
             <ion-input
-              [type]="showPassword ? 'text' : 'password'"
-              placeholder="Contraseña"
-              name="password"
-              [(ngModel)]="password"
-              class="custom-input"
+              [type]="mostrarPassword ? 'text' : 'password'"
+              placeholder="••••••••"
+              [(ngModel)]="loginPassword"
+              name="loginPassword"
             ></ion-input>
             <ion-icon
-              [name]="showPassword ? 'eye-outline' : 'eye-off-outline'"
+              [name]="mostrarPassword ? 'eye-outline' : 'eye-off-outline'"
               slot="end"
-              class="password-toggle"
-              (click)="togglePasswordVisibility()"
+              class="toggle-icon"
+              (click)="togglePassword('login')"
             ></ion-icon>
           </ion-item>
         </div>
 
-        <ion-button expand="block" type="submit" class="primary animate-button">
-          <span>Iniciar sesión</span>
+        <ion-button expand="block" type="submit" class="btn-submit">
+          Iniciar Sesión
         </ion-button>
+      </div>
 
-        <div class="divider">
-          <span>o continúa con</span>
+      <!-- Login con reconocimiento facial -->
+      <div *ngIf="loginConRostro" class="facial-login-section">
+        <div class="facial-instruction">
+          <ion-icon name="scan-outline"></ion-icon>
+          <h3>Reconocimiento Facial</h3>
+          <p>Captura tu rostro para iniciar sesión</p>
+          <p class="small-hint">Podrás elegir entre webcam, cámara o galería</p>
         </div>
 
-        <div class="social-buttons">
-          <ion-button fill="outline" (click)="loginWithSocial('google')" class="social-button">
-            <ion-icon name="logo-google" slot="icon-only"></ion-icon>
+        <ion-button 
+          expand="block" 
+          (click)="loginConReconocimientoFacial()" 
+          class="btn-facial"
+          [disabled]="procesandoFoto"
+        >
+          <ion-spinner *ngIf="procesandoFoto" name="crescent"></ion-spinner>
+          <ion-icon *ngIf="!procesandoFoto" name="camera-outline" slot="start"></ion-icon>
+          <span *ngIf="!procesandoFoto">Elegir Fuente de Imagen</span>
+          <span *ngIf="procesandoFoto">Procesando...</span>
+        </ion-button>
+      </div>
+
+      <div class="divider">
+        <span>¿No tienes cuenta?</span>
+      </div>
+
+      <ion-button expand="block" fill="outline" (click)="cambiarVista()" class="btn-secondary">
+        Crear Cuenta
+      </ion-button>
+    </form>
+
+    <!-- Formulario de REGISTRO -->
+    <form *ngIf="enRegistro" (ngSubmit)="registrarse()" class="form-container">
+      <h2>Crear Cuenta</h2>
+
+      <div class="form-group">
+        <ion-label class="label-text">Nombre Completo</ion-label>
+        <ion-item class="form-input">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Tu nombre"
+            [(ngModel)]="registroNombre"
+            name="registroNombre"
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <ion-label class="label-text">RUT</ion-label>
+        <ion-item class="form-input">
+          <ion-icon name="id-card-outline" slot="start"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="12.345.678-9"
+            [(ngModel)]="registroRut"
+            name="registroRut"
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <ion-label class="label-text">Dirección</ion-label>
+        <ion-item class="form-input">
+          <ion-icon name="home-outline" slot="start"></ion-icon>
+          <ion-input
+            type="text"
+            placeholder="Tu dirección"
+            [(ngModel)]="registroDireccion"
+            name="registroDireccion"
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <ion-label class="label-text">Correo Electrónico</ion-label>
+        <ion-item class="form-input">
+          <ion-icon name="mail-outline" slot="start"></ion-icon>
+          <ion-input
+            type="email"
+            placeholder="tu@email.com"
+            [(ngModel)]="registroEmail"
+            name="registroEmail"
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <ion-label class="label-text">Contraseña</ion-label>
+        <ion-item class="form-input">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input
+            [type]="mostrarPassword ? 'text' : 'password'"
+            placeholder="Mínimo 6 caracteres"
+            [(ngModel)]="registroPassword"
+            name="registroPassword"
+          ></ion-input>
+          <ion-icon
+            [name]="mostrarPassword ? 'eye-outline' : 'eye-off-outline'"
+            slot="end"
+            class="toggle-icon"
+            (click)="togglePassword('password')"
+          ></ion-icon>
+        </ion-item>
+      </div>
+
+      <div class="form-group">
+        <ion-label class="label-text">Confirmar Contraseña</ion-label>
+        <ion-item class="form-input">
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          <ion-input
+            [type]="mostrarPasswordConfirm ? 'text' : 'password'"
+            placeholder="Confirma tu contraseña"
+            [(ngModel)]="registroPasswordConfirm"
+            name="registroPasswordConfirm"
+          ></ion-input>
+          <ion-icon
+            [name]="mostrarPasswordConfirm ? 'eye-outline' : 'eye-off-outline'"
+            slot="end"
+            class="toggle-icon"
+            (click)="togglePassword('confirm')"
+          ></ion-icon>
+        </ion-item>
+      </div>
+
+      <!-- Sección de reconocimiento facial -->
+      <div class="facial-section">
+        <ion-label class="label-text facial-label">
+          <ion-icon name="scan-outline"></ion-icon>
+          Reconocimiento Facial (Opcional)
+        </ion-label>
+        
+        <div *ngIf="!fotoRegistro" class="capture-button-container">
+          <div class="button-grid">
+            <ion-button 
+              expand="block" 
+              fill="outline" 
+              (click)="capturarFotoRegistro()"
+              [disabled]="procesandoFoto"
+              class="btn-capture"
+            >
+              <ion-spinner *ngIf="procesandoFoto" name="crescent"></ion-spinner>
+              <ion-icon *ngIf="!procesandoFoto" name="camera-outline" slot="start"></ion-icon>
+              <span *ngIf="!procesandoFoto">Elegir Fuente</span>
+              <span *ngIf="procesandoFoto">Capturando...</span>
+            </ion-button>
+          </div>
+          <p class="facial-hint">Podrás elegir entre webcam, cámara o galería</p>
+        </div>
+
+        <div *ngIf="fotoRegistro" class="preview-container">
+          <div class="photo-preview">
+            <img [src]="fotoRegistro" alt="Foto de perfil">
+            <div class="photo-overlay">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              <span>Foto capturada</span>
+            </div>
+          </div>
+          <ion-button 
+            expand="block" 
+            fill="clear" 
+            color="danger" 
+            (click)="eliminarFotoRegistro()"
+            class="btn-remove-photo"
+          >
+            <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+            Eliminar foto
           </ion-button>
-          <ion-button fill="outline" (click)="loginWithSocial('apple')" class="social-button">
-            <ion-icon name="logo-apple" slot="icon-only"></ion-icon>
-          </ion-button>
         </div>
+      </div>
 
-        <div class="actions">
-          <a routerLink="/pages/agregar" class="register-link">Registrarme</a>
-          <a class="forgot" (click)="forgot()">¿Olvidaste tu contraseña?</a>
-        </div>
-      </form>
-    </div>
+      <ion-button expand="block" type="submit" class="btn-submit">
+        Registrarse
+      </ion-button>
+
+      <div class="divider">
+        <span>¿Ya tienes cuenta?</span>
+      </div>
+
+      <ion-button expand="block" fill="outline" (click)="cambiarVista()" class="btn-secondary">
+        Iniciar Sesión
+      </ion-button>
+    </form>
   </div>
 </ion-content>
