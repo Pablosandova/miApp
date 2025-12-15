@@ -123,20 +123,48 @@ export class LoginPage implements OnInit {
 
   // Capturar foto para registro
   async capturarFotoRegistro() {
+    this.procesandoFoto = true;
+    
     try {
-      this.procesandoFoto = true;
+      console.log('🎯 Iniciando captura de foto para registro...');
+      this.mostrarMensaje('Selecciona la fuente de tu imagen', 'exito');
+      
       const foto = await this.facialService.capturarFoto();
       
-      if (foto) {
-        this.fotoRegistro = foto;
-        this.descriptorFacialRegistro = await this.facialService.extraerCaracteristicasFaciales(foto);
-        this.mostrarMensaje('Foto capturada correctamente', 'exito');
-      } else {
-        this.mostrarMensaje('No se pudo capturar la foto', 'error');
+      if (!foto) {
+        console.log('⚠️ No se capturó ninguna foto');
+        this.mostrarMensaje('Captura cancelada', 'error');
+        this.fotoRegistro = null;
+        return;
       }
-    } catch (error) {
-      console.error('Error al capturar foto:', error);
-      this.mostrarMensaje('Error al acceder a la cámara', 'error');
+      
+      console.log('📸 Foto capturada, procesando imagen...');
+      this.mostrarMensaje('Procesando tu foto...', 'exito');
+      this.fotoRegistro = foto;
+      
+      this.descriptorFacialRegistro = await this.facialService.extraerCaracteristicasFaciales(foto);
+      
+      if (this.descriptorFacialRegistro && this.descriptorFacialRegistro.length > 0) {
+        console.log('✓ Características extraídas:', this.descriptorFacialRegistro.length);
+        this.mostrarMensaje('✓ Foto guardada exitosamente', 'exito');
+      } else {
+        console.error('❌ No se pudieron extraer características');
+        this.fotoRegistro = null;
+        this.descriptorFacialRegistro = [];
+        this.mostrarMensaje('No se pudo procesar la imagen. Intenta nuevamente', 'error');
+      }
+    } catch (error: any) {
+      console.error('❌ Error en capturarFotoRegistro:', error);
+      this.fotoRegistro = null;
+      this.descriptorFacialRegistro = [];
+      
+      if (error.message && (error.message.includes('cancel') || error.message.includes('cancelled'))) {
+        this.mostrarMensaje('Captura cancelada', 'error');
+      } else if (error.message && error.message.includes('permisos')) {
+        this.mostrarMensaje('Por favor, permite el acceso a la cámara', 'error');
+      } else {
+        this.mostrarMensaje('Error al procesar. Intenta nuevamente', 'error');
+      }
     } finally {
       this.procesandoFoto = false;
     }
@@ -215,20 +243,33 @@ export class LoginPage implements OnInit {
 
   // Login con reconocimiento facial
   async loginConReconocimientoFacial() {
+    this.procesandoFoto = true;
+    
     try {
-      this.procesandoFoto = true;
-      this.mostrarMensaje('Capturando foto...', 'exito');
+      console.log('🎯 Iniciando login con reconocimiento facial...');
+      this.mostrarMensaje('Selecciona la fuente de tu imagen', 'exito');
       
       const foto = await this.facialService.capturarFoto();
       
       if (!foto) {
-        this.mostrarMensaje('No se pudo capturar la foto', 'error');
-        this.procesandoFoto = false;
+        console.log('⚠️ No se capturó ninguna foto');
+        this.mostrarMensaje('Captura cancelada', 'error');
         return;
       }
       
-      this.mostrarMensaje('Analizando rostro...', 'exito');
+      console.log('📸 Foto capturada, extrayendo características...');
+      this.mostrarMensaje('Analizando tu rostro...', 'exito');
+      
       const descriptorActual = await this.facialService.extraerCaracteristicasFaciales(foto);
+      
+      if (!descriptorActual || descriptorActual.length === 0) {
+        console.error('❌ No se pudieron extraer características');
+        this.mostrarMensaje('No se pudo analizar la imagen. Intenta nuevamente', 'error');
+        return;
+      }
+      
+      console.log('✓ Características extraídas, buscando coincidencia...');
+      this.mostrarMensaje('Verificando identidad...', 'exito');
       
       const emailEncontrado = await this.facialService.buscarUsuarioPorRostro(descriptorActual);
       
@@ -237,19 +278,28 @@ export class LoginPage implements OnInit {
         const usuario = usuariosRegistrados.find((u: any) => u.email === emailEncontrado);
         
         if (usuario) {
-          this.mostrarMensaje('¡Rostro reconocido! Bienvenido ' + usuario.nombre, 'exito');
+          console.log('✓ Usuario reconocido:', usuario.nombre);
+          this.mostrarMensaje('¡Bienvenido ' + usuario.nombre + '!', 'exito');
           localStorage.setItem('usuarioLogueado', JSON.stringify(usuario));
           
           setTimeout(() => {
             this.router.navigate(['/home']);
           }, 1500);
+        } else {
+          console.error('❌ Usuario no encontrado en localStorage');
+          this.mostrarMensaje('Error: Usuario no encontrado', 'error');
         }
       } else {
-        this.mostrarMensaje('Rostro no reconocido. Intenta nuevamente', 'error');
+        console.log('⚠️ Rostro no reconocido');
+        this.mostrarMensaje('Rostro no reconocido. Regístrate primero', 'error');
       }
-    } catch (error) {
-      console.error('Error en login facial:', error);
-      this.mostrarMensaje('Error al procesar el reconocimiento facial', 'error');
+    } catch (error: any) {
+      console.error('❌ Error en login facial:', error);
+      if (error.message && (error.message.includes('cancel') || error.message.includes('cancelled'))) {
+        this.mostrarMensaje('Captura cancelada', 'error');
+      } else {
+        this.mostrarMensaje('Error al procesar. Intenta nuevamente', 'error');
+      }
     } finally {
       this.procesandoFoto = false;
     }

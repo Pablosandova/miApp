@@ -14,11 +14,15 @@
 .modern-header {
   background: var(--surface-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .modern-content {
   --background: var(--background-color);
   padding-bottom: 32px;
+  padding-top: 20px;
 }
 
 .form-section,

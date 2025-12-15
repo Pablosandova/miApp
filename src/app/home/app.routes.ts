@@ -29,6 +29,18 @@ export const routes: Routes = [
   {
     path: 'rutina-personalizada',
     loadComponent: () => import('../pages/rutina-personalizada/rutina-personalizada.page').then(m => m.RutinaPersonalizadaPage)
+  },
+  {
+    path: 'rutinas',
+    loadComponent: () => import('../pages/rutinas/rutinas.page').then(m => m.RutinasPage)
+  },
+  {
+    path: 'registro-diario',
+    loadComponent: () => import('../pages/registro-diario/registro-diario.page').then(m => m.RegistroDiarioPage)
+  },
+  {
+    path: 'upload-image',
+    loadComponent: () => import('../pages/upload-image/upload-image.page').then(m => m.UploadImagePage)
   }
 
 

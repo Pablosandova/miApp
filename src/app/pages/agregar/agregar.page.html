@@ -11,8 +11,8 @@
   <!-- Formulario de Agregar Usuario -->
   <div class="form-section">
     <div class="section-header">
-      <h2>Nuevo Usuario</h2>
-      <p>Completa los datos para registrar un usuario</p>
+      <h2>{{ modoEdicion ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+      <p>{{ modoEdicion ? 'Actualiza los datos del usuario' : 'Completa los datos para registrar un usuario' }}</p>
     </div>
 
     <form (ngSubmit)="agregarUsuario()" class="user-form">
@@ -80,16 +80,28 @@
         </ion-input>
       </div>
 
-      <!-- Botón Enviar -->
-      <ion-button
-        type="submit"
-        expand="block"
-        size="large"
-        class="submit-btn"
-        [disabled]="!formulario.nombre || !formulario.edad || !formulario.estatura || !formulario.peso">
-        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
-        Registrar Usuario
-      </ion-button>
+      <!-- Botones -->
+      <div class="button-group">
+        <ion-button
+          type="submit"
+          expand="block"
+          size="large"
+          class="submit-btn"
+          [disabled]="!formulario.nombre || !formulario.edad || !formulario.estatura || !formulario.peso">
+          <ion-icon [name]="modoEdicion ? 'save-outline' : 'checkmark-circle-outline'" slot="start"></ion-icon>
+          {{ modoEdicion ? 'Actualizar Usuario' : 'Registrar Usuario' }}
+        </ion-button>
+        
+        <ion-button
+          *ngIf="modoEdicion"
+          expand="block"
+          size="large"
+          color="medium"
+          (click)="cancelarEdicion()">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Cancelar
+        </ion-button>
+      </div>
     </form>
   </div>
 
@@ -122,6 +134,14 @@
             <td>{{ usuario.peso }}</td>
             <td class="imc-cell">{{ calcularIMC(usuario).toFixed(1) }}</td>
             <td class="actions-cell">
+              <ion-button
+                size="small"
+                fill="clear"
+                color="primary"
+                (click)="editarUsuario(i)"
+                class="edit-btn">
+                <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+              </ion-button>
               <ion-button
                 size="small"
                 fill="clear"

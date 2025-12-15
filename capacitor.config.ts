@@ -3,7 +3,12 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'miApp',
-  webDir: 'www'
+  webDir: 'www',
+  plugins: {
+    Camera: {
+      presentationStyle: 'popover'
+    }
+  }
 };
 
 export default config;

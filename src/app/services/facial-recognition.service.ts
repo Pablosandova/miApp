@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 
 @Injectable({
   providedIn: 'root'
@@ -9,28 +9,73 @@ export class FacialRecognitionService {
   constructor() { }
 
   /**
+   * Solicita permisos de cámara
+   */
+  async solicitarPermisos(): Promise<boolean> {
+    try {
+      const permissions = await Camera.checkPermissions();
+      
+      if (permissions.camera === 'granted' && permissions.photos === 'granted') {
+        return true;
+      }
+      
+      // Solicitar permisos
+      const result = await Camera.requestPermissions({
+        permissions: ['camera', 'photos']
+      });
+      
+      return result.camera === 'granted' && result.photos === 'granted';
+    } catch (error) {
+      console.error('Error al solicitar permisos:', error);
+      return false;
+    }
+  }
+
+  /**
    * Captura una foto usando la cámara del dispositivo o webcam con opción de elegir
    */
   async capturarFoto(): Promise<string | null> {
     try {
+      // Verificar y solicitar permisos primero
+      const tienePermisos = await this.solicitarPermisos();
+      
+      if (!tienePermisos) {
+        console.error('No se tienen permisos de cámara');
+        throw new Error('Se requieren permisos de cámara para continuar');
+      }
+
       // Mostrar opciones al usuario
-      const image = await Camera.getPhoto({
+      const image: Photo = await Camera.getPhoto({
         quality: 90,
-        allowEditing: false,
+        allowEditing: true,
         resultType: CameraResultType.DataUrl,
-        source: CameraSource.Prompt, // Permite elegir entre cámara, galería o cancelar
+        source: CameraSource.Prompt,
         promptLabelHeader: 'Selecciona una opción',
         promptLabelPhoto: 'Desde Galería',
         promptLabelPicture: 'Tomar Foto',
+        promptLabelCancel: 'Cancelar',
         correctOrientation: true,
         width: 640,
-        height: 640
+        height: 640,
+        presentationStyle: 'popover',
+        saveToGallery: false
       });
 
-      return image.dataUrl || null;
-    } catch (error) {
+      if (!image.dataUrl) {
+        console.error('No se obtuvo dataUrl de la imagen');
+        return null;
+      }
+
+      return image.dataUrl;
+    } catch (error: any) {
+      // Si el usuario cancela, no es un error real
+      if (error.message && error.message.includes('cancel')) {
+        console.log('Usuario canceló la captura de foto');
+        return null;
+      }
+      
       console.error('Error al capturar foto:', error);
-      return null;
+      throw error;
     }
   }
 
@@ -39,20 +84,39 @@ export class FacialRecognitionService {
    */
   async capturarFotoDirecta(): Promise<string | null> {
     try {
-      const image = await Camera.getPhoto({
+      // Verificar y solicitar permisos primero
+      const tienePermisos = await this.solicitarPermisos();
+      
+      if (!tienePermisos) {
+        console.error('No se tienen permisos de cámara');
+        throw new Error('Se requieren permisos de cámara para continuar');
+      }
+
+      const image: Photo = await Camera.getPhoto({
         quality: 90,
-        allowEditing: false,
+        allowEditing: true,
         resultType: CameraResultType.DataUrl,
         source: CameraSource.Camera,
         correctOrientation: true,
         width: 640,
-        height: 640
+        height: 640,
+        saveToGallery: false
       });
 
-      return image.dataUrl || null;
-    } catch (error) {
-      console.error('Error al capturar foto:', error);
-      return null;
+      if (!image.dataUrl) {
+        console.error('No se obtuvo dataUrl de la imagen');
+        return null;
+      }
+
+      return image.dataUrl;
+    } catch (error: any) {
+      if (error.message && error.message.includes('cancel')) {
+        console.log('Usuario canceló la captura de foto');
+        return null;
+      }
+      
+      console.error('Error al capturar foto directa:', error);
+      throw error;
     }
   }
 
@@ -61,57 +125,79 @@ export class FacialRecognitionService {
    * En una implementación real, usarías face-api.js con modelos pre-entrenados
    */
   async extraerCaracteristicasFaciales(imageDataUrl: string): Promise<number[]> {
-    // Simulación de extracción de características
-    // En producción, aquí usarías face-api.js para extraer descriptores faciales reales
-    
+    // Validar que la imagen no esté vacía
+    if (!imageDataUrl || imageDataUrl.trim() === '') {
+      console.error('ImageDataUrl está vacía');
+      return [];
+    }
+
     return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = 128;
-        canvas.height = 128;
-        const ctx = canvas.getContext('2d');
-        
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, 128, 128);
-          const imageData = ctx.getImageData(0, 0, 128, 128);
-          
-          // Generar un "descriptor" simplificado basado en la imagen
-          // Este es un método simplificado - en producción usarías face-api.js
-          const descriptor: number[] = [];
-          const blockSize = 16;
-          
-          for (let y = 0; y < 128; y += blockSize) {
-            for (let x = 0; x < 128; x += blockSize) {
-              let r = 0, g = 0, b = 0, count = 0;
-              
-              for (let by = 0; by < blockSize; by++) {
-                for (let bx = 0; bx < blockSize; bx++) {
-                  const idx = ((y + by) * 128 + (x + bx)) * 4;
-                  r += imageData.data[idx];
-                  g += imageData.data[idx + 1];
-                  b += imageData.data[idx + 2];
-                  count++;
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            
+            if (!ctx) {
+              console.error('No se pudo obtener contexto 2D del canvas');
+              resolve([]);
+              return;
+            }
+
+            ctx.drawImage(img, 0, 0, 64, 64);
+            const imageData = ctx.getImageData(0, 0, 64, 64);
+            
+            // Generar un "descriptor" simplificado basado en la imagen
+            const descriptor: number[] = [];
+            const blockSize = 8;
+            
+            for (let y = 0; y < 64; y += blockSize) {
+              for (let x = 0; x < 64; x += blockSize) {
+                let r = 0, g = 0, b = 0, count = 0;
+                
+                for (let by = 0; by < blockSize && y + by < 64; by++) {
+                  for (let bx = 0; bx < blockSize && x + bx < 64; bx++) {
+                    const idx = ((y + by) * 64 + (x + bx)) * 4;
+                    if (idx + 2 < imageData.data.length) {
+                      r += imageData.data[idx];
+                      g += imageData.data[idx + 1];
+                      b += imageData.data[idx + 2];
+                      count++;
+                    }
+                  }
+                }
+                
+                if (count > 0) {
+                  descriptor.push(r / count / 255);
+                  descriptor.push(g / count / 255);
+                  descriptor.push(b / count / 255);
                 }
               }
-              
-              descriptor.push(r / count / 255);
-              descriptor.push(g / count / 255);
-              descriptor.push(b / count / 255);
             }
+            
+            console.log('✓ Características extraídas:', descriptor.length, 'valores');
+            resolve(descriptor.length > 0 ? descriptor : []);
+          } catch (error) {
+            console.error('Error al procesar imagen:', error);
+            resolve([]);
           }
-          
-          resolve(descriptor);
-        } else {
+        };
+        
+        img.onerror = (error) => {
+          console.error('Error al cargar imagen:', error);
           resolve([]);
-        }
-      };
-      
-      img.onerror = () => {
+        };
+        
+        img.src = imageDataUrl;
+      } catch (error) {
+        console.error('Error general en extracción:', error);
         resolve([]);
-      };
-      
-      img.src = imageDataUrl;
+      }
     });
   }
 

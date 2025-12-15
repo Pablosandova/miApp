@@ -18,7 +18,8 @@ import {
   IonSearchbar,
   IonSegment,
   IonSegmentButton,
-  IonBadge
+  IonBadge,
+  IonButtons
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
@@ -30,7 +31,7 @@ import {
   flameOutline, 
   waterOutline, 
   fitnessOutline, 
-  playOutline, personCircleOutline, personAddOutline, schoolOutline, checkmarkCircleOutline, rocketOutline } from 'ionicons/icons';
+  playOutline, personCircleOutline, personAddOutline, schoolOutline, checkmarkCircleOutline, rocketOutline, calendarOutline, scaleOutline, resizeOutline, analyticsOutline, timeOutline, leafOutline, timerOutline, checkmarkDoneOutline, cameraOutline } from 'ionicons/icons';
 
 interface Usuario {
   nombre: string;
@@ -88,7 +89,8 @@ interface Rutina {
     IonSearchbar,
     IonSegment,
     IonSegmentButton,
-    IonBadge
+    IonBadge,
+    IonButtons
   ],
 })
 export class HomePage implements OnInit, OnDestroy {
@@ -103,21 +105,27 @@ export class HomePage implements OnInit, OnDestroy {
       nivel: 'Principiante',
       categoria: 'Sumisiones',
       descripcion: 'Técnica fundamental de control y sumisión desde la posición de guardia',
-      imagen: 'assets/bjj1.jpeg'
+      imagen: 'assets/bjj1.jpeg',
+      duracion: 15,
+      calorias: 150
     },
     {
       nombre: 'Triangle Choke',
       nivel: 'Intermedio',
       categoria: 'Estrangulaciones',
       descripcion: 'Estrangulación efectiva utilizando las piernas desde la guardia',
-      imagen: 'assets/bjj2.jpeg'
+      imagen: 'assets/bjj2.jpeg',
+      duracion: 20,
+      calorias: 200
     },
     {
       nombre: 'Berimbolo',
       nivel: 'Avanzado',
       categoria: 'Inversiones',
       descripcion: 'Técnica moderna de inversión para tomar la espalda',
-      imagen: 'assets/bjj3.jpeg'
+      imagen: 'assets/bjj3.jpeg',
+      duracion: 25,
+      calorias: 250
     }
   ];
 
@@ -191,7 +199,7 @@ export class HomePage implements OnInit, OnDestroy {
   ];
 
   constructor(private router: Router) {
-    addIcons({personCircleOutline,personAddOutline,rocketOutline,trophyOutline,nutritionOutline,barbellOutline,flashOutline,schoolOutline,checkmarkCircleOutline,arrowForwardOutline,flameOutline,waterOutline,fitnessOutline,playOutline});
+    addIcons({cameraOutline,checkmarkDoneOutline,barbellOutline,personAddOutline,personCircle,fitnessOutline,calendarOutline,scaleOutline,resizeOutline,analyticsOutline,trophyOutline,nutritionOutline,timeOutline,flameOutline,arrowForwardOutline,flame,leafOutline,waterOutline,timerOutline,playOutline,personCircleOutline,rocketOutline,flashOutline,schoolOutline,checkmarkCircleOutline});
   }
 
   ngOnInit() {

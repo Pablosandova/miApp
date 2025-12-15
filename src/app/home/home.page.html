@@ -3,350 +3,273 @@
     <ion-title class="ion-text-center">
       Elite Performance
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/upload-image">
+        <ion-icon name="camera-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/registro-diario">
+        <ion-icon name="checkmark-done-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/rutinas">
+        <ion-icon name="barbell-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/agregar">
+        <ion-icon name="person-add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
   
-  <!-- Usuario Selector -->
-  <ion-toolbar *ngIf="usuarios.length > 0" class="usuario-toolbar">
-    <div class="usuario-selector">
-      <div class="selector-label">
-        <ion-icon name="person-circle-outline"></ion-icon>
-        <span>Usuario:</span>
+  <!-- Usuario Selector Compacto -->
+  <ion-toolbar *ngIf="usuarios.length > 0" class="usuario-toolbar-compact">
+    <div class="usuario-selector-compact">
+      <div class="current-user">
+        <ion-icon name="person-circle"></ion-icon>
+        <span class="user-name">{{ usuarioSeleccionado?.nombre || 'Seleccionar' }}</span>
       </div>
+    </div>
+    
+    <!-- Selector de usuario en dropdown -->
+    <div class="user-chips">
       <ion-button 
         *ngFor="let usuario of usuarios"
         [fill]="usuarioSeleccionado?.nombre === usuario.nombre ? 'solid' : 'outline'"
         [color]="usuarioSeleccionado?.nombre === usuario.nombre ? 'secondary' : 'medium'"
         size="small"
         (click)="cambiarUsuario(usuario)"
-        class="usuario-btn">
+        class="user-chip">
         {{ usuario.nombre }}
-      </ion-button>
-      <ion-button 
-        fill="outline"
-        color="success"
-        size="small"
-        routerLink="/agregar"
-        class="usuario-btn agregar-btn">
-        <ion-icon name="person-add-outline" slot="start"></ion-icon>
-        Agregar
       </ion-button>
     </div>
   </ion-toolbar>
 
   <!-- Mensaje cuando no hay usuarios -->
-  <ion-toolbar *ngIf="usuarios.length === 0" class="no-users-toolbar">
-    <div class="no-users-message">
-      <div class="performance-cta">
-        <div class="cta-icon">
-          <ion-icon name="rocket-outline"></ion-icon>
-        </div>
-        <h3>¿Listo para mejorar tu rendimiento?</h3>
-        <p>Crea tu perfil personalizado y obtén planes adaptados a tus necesidades</p>
-        <ion-button 
-          fill="solid"
-          color="secondary"
-          routerLink="/agregar"
-          class="add-first-user-btn">
-          <ion-icon name="person-add-outline" slot="start"></ion-icon>
-          Crear Mi Perfil
-        </ion-button>
-      </div>
+  <ion-toolbar *ngIf="usuarios.length === 0" class="no-users-compact">
+    <div class="welcome-message">
+      <ion-icon name="fitness-outline"></ion-icon>
+      <span>Crea tu perfil para empezar</span>
     </div>
   </ion-toolbar>
 
-  <!-- Información del Usuario Seleccionado -->
-  <ion-toolbar *ngIf="usuarioSeleccionado" class="info-usuario-toolbar">
-    <div class="usuario-info">
-      <div class="info-item">
-        <span class="label">Edad:</span>
-        <span class="valor">{{ usuarioSeleccionado.edad }} años</span>
+  <!-- Stats del Usuario - Compacto -->
+  <ion-toolbar *ngIf="usuarioSeleccionado" class="stats-toolbar">
+    <div class="stats-compact">
+      <div class="stat-item">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>{{ usuarioSeleccionado.edad }}a</span>
       </div>
-      <div class="info-item">
-        <span class="label">Peso:</span>
-        <span class="valor">{{ usuarioSeleccionado.peso }} kg</span>
+      <div class="stat-item">
+        <ion-icon name="scale-outline"></ion-icon>
+        <span>{{ usuarioSeleccionado.peso }}kg</span>
       </div>
-      <div class="info-item">
-        <span class="label">Altura:</span>
-        <span class="valor">{{ usuarioSeleccionado.estatura }} cm</span>
+      <div class="stat-item">
+        <ion-icon name="resize-outline"></ion-icon>
+        <span>{{ usuarioSeleccionado.estatura }}cm</span>
       </div>
-      <div class="info-item imc">
-        <span class="label">IMC:</span>
-        <span class="valor">{{ (usuarioSeleccionado.peso / ((usuarioSeleccionado.estatura / 100) * (usuarioSeleccionado.estatura / 100))).toFixed(1) }}</span>
+      <div class="stat-item highlight">
+        <ion-icon name="analytics-outline"></ion-icon>
+        <span>IMC {{ (usuarioSeleccionado.peso / ((usuarioSeleccionado.estatura / 100) * (usuarioSeleccionado.estatura / 100))).toFixed(1) }}</span>
       </div>
     </div>
-  </ion-toolbar>
-
-  <ion-toolbar>
-    <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)" class="modern-segment">
-      <ion-segment-button value="jiujitsu">
-        <ion-icon name="trophy-outline"></ion-icon>
-        <ion-label>Jiu-jitsu</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="nutricion">
-        <ion-icon name="nutrition-outline"></ion-icon>
-        <ion-label>Nutrición</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="ejercicio">
-        <ion-icon name="barbell-outline"></ion-icon>
-        <ion-label>Ejercicio</ion-label>
-      </ion-segment-button>
-    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="modern-content">
-  <!-- Sección de Jiu-jitsu (Hero + Técnicas) -->
-  <div *ngIf="selectedSegment === 'jiujitsu'" class="segment-content jiujitsu-section">
-    <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <div class="hero-badge">
-          <ion-icon name="trophy-outline"></ion-icon>
-          <span>Elite Performance</span>
-        </div>
-        <h1 class="hero-title">Domina el Arte Marcial</h1>
-        <p class="hero-subtitle">Técnicas fundamentales y avanzadas para tu entrenamiento de Jiu-Jitsu</p>
-        <div class="hero-stats">
-          <div class="stat">
-            <span class="stat-value">3</span>
-            <span class="stat-label">Técnicas</span>
-          </div>
-          <div class="stat">
-            <span class="stat-value">∞</span>
-            <span class="stat-label">Posibilidades</span>
-          </div>
-        </div>
+  <!-- Hero Section Simplificado -->
+  <div class="hero-compact">
+    <div class="hero-gradient"></div>
+    <div class="hero-content-compact">
+      <h1>Tu Entrenamiento Elite</h1>
+      <p>Planes personalizados de Jiu-Jitsu, nutrición y ejercicio</p>
+    </div>
+  </div>
+
+  <!-- Tabs de Navegación -->
+  <div class="tabs-container">
+    <div class="tabs-scroll">
+      <div 
+        class="tab-item" 
+        [class.active]="selectedSegment === 'jiujitsu'"
+        (click)="selectedSegment = 'jiujitsu'">
+        <ion-icon name="trophy-outline"></ion-icon>
+        <span>Jiu-Jitsu</span>
+      </div>
+      <div 
+        class="tab-item" 
+        [class.active]="selectedSegment === 'nutricion'"
+        (click)="selectedSegment = 'nutricion'">
+        <ion-icon name="nutrition-outline"></ion-icon>
+        <span>Nutrición</span>
+      </div>
+      <div 
+        class="tab-item" 
+        [class.active]="selectedSegment === 'ejercicio'"
+        (click)="selectedSegment = 'ejercicio'">
+        <ion-icon name="barbell-outline"></ion-icon>
+        <span>Ejercicio</span>
       </div>
     </div>
+  </div>
 
-    <!-- Descripción de la App -->
-    <div class="app-description">
-      <h2 class="desc-title">¿Qué es Elite Performance?</h2>
-      <p class="desc-text">
-        Elite Performance es tu compañero digital en el Jiu-Jitsu. Accede a técnicas profesionales, 
-        planes nutricionales personalizados y rutinas de entrenamiento adaptadas a tu nivel y objetivos.
-      </p>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <ion-icon name="barbell-outline"></ion-icon>
-          </div>
-          <h3>Técnicas Avanzadas</h3>
-          <p>Aprende desde posiciones básicas hasta inversiones complejas</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <ion-icon name="nutrition-outline"></ion-icon>
-          </div>
-          <h3>Nutrición Personalizada</h3>
-          <p>Planes adaptados a tu peso, edad y objetivos de rendimiento</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <ion-icon name="flash-outline"></ion-icon>
-          </div>
-          <h3>Rutinas Personalizadas</h3>
-          <p>Entrenamientos diseñados según tu IMC y condición física</p>
-        </div>
-      </div>
+  <!-- Sección de Jiu-Jitsu -->
+  <div *ngIf="selectedSegment === 'jiujitsu'" class="content-section">
+    <div class="section-title">
+      <h2>Técnicas de Jiu-Jitsu</h2>
+      <span class="badge-count">{{ tecnicasJiujitsu.length }}</span>
     </div>
 
-    <!-- Sección de Técnicas -->
-    <div class="tecnicas-container">
-      <div class="section-header">
-        <h2 class="section-title">Técnicas Esenciales</h2>
-        <p class="section-subtitle">Domina las bases fundamentales del Jiu-Jitsu</p>
-      </div>
-
-      <div class="modern-grid">
-        <ion-card *ngFor="let tecnica of tecnicasJiujitsu; let i = index" class="modern-card" [attr.data-index]="i">
-          <div class="card-image-container">
-            <img 
-              [src]="tecnica.imagen" 
-              [alt]="tecnica.nombre"
-              (error)="onImageError($event)"
-              loading="lazy"
-            />
-            <div class="difficulty-badge" [class]="tecnica.nivel.toLowerCase()">
-              {{ tecnica.nivel }}
-            </div>
-            <div class="card-overlay">
-              <div class="overlay-content">
-                <span class="overlay-category">{{ tecnica.categoria }}</span>
-              </div>
-            </div>
+    <div class="cards-grid">
+      <ion-card *ngFor="let tecnica of tecnicasJiujitsu" class="content-card">
+        <div class="card-image">
+          <img 
+            [src]="tecnica.imagen" 
+            [alt]="tecnica.nombre"
+            (error)="onImageError($event)"
+          />
+          <div class="card-badge" [class]="tecnica.nivel.toLowerCase()">
+            {{ tecnica.nivel }}
           </div>
-
-          <ion-card-header class="card-header-custom">
-            <ion-card-title class="card-title-custom">{{ tecnica.nombre }}</ion-card-title>
-            <ion-card-subtitle class="card-subtitle-custom">
-              <ion-icon name="school-outline"></ion-icon>
-              {{ tecnica.nivel }}
-            </ion-card-subtitle>
-          </ion-card-header>
-
-          <ion-card-content class="card-content-custom">
-            <p class="card-description">{{ tecnica.descripcion }}</p>
-            
-            <div class="card-meta">
-              <span class="meta-item">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
-                Fundamental
-              </span>
-            </div>
-
-            <ion-button 
-              expand="block" 
-              fill="solid" 
-              class="learn-more-btn"
-              color="secondary"
-            >
-              Aprender Técnica
-              <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
-      </div>
-    </div>
-
-    <!-- Call to Action -->
-    <div class="cta-section">
-      <div class="cta-content">
-        <h2>¿Listo para mejorar tu rendimiento?</h2>
-        <p>Crea tu perfil personalizado y obtén planes adaptados a tus necesidades</p>
-        <ion-button 
-          expand="block" 
-          fill="solid" 
-          color="secondary"
-          routerLink="/agregar"
-          class="cta-button"
-        >
-          <ion-icon name="person-add-outline" slot="start"></ion-icon>
-          Crear Mi Perfil
-        </ion-button>
-      </div>
+        </div>
+        <div class="card-body">
+          <h3>{{ tecnica.nombre }}</h3>
+          <p class="card-desc">{{ tecnica.descripcion }}</p>
+          <div class="card-meta">
+            <span class="meta-item">
+              <ion-icon name="time-outline"></ion-icon>
+              {{ tecnica.duracion }} min
+            </span>
+            <span class="meta-item">
+              <ion-icon name="flame-outline"></ion-icon>
+              {{ tecnica.calorias }} cal
+            </span>
+          </div>
+          <ion-button 
+            expand="block" 
+            fill="clear" 
+            class="card-action">
+            Ver Detalles
+            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-card>
     </div>
   </div>
 
   <!-- Sección de Nutrición -->
-  <div *ngIf="selectedSegment === 'nutricion'" class="segment-content">
-    <h2 class="section-title">Planes Nutricionales</h2>
-    <div *ngIf="!usuarioSeleccionado" class="no-user-message">
+  <div *ngIf="selectedSegment === 'nutricion'" class="content-section">
+    <div *ngIf="!usuarioSeleccionado" class="empty-state">
       <ion-icon name="person-add-outline"></ion-icon>
-      <p>Por favor, crea un usuario en la sección "Agregar" para ver planes personalizados.</p>
+      <h3>Crea tu perfil</h3>
+      <p>Necesitas seleccionar un usuario para ver planes nutricionales personalizados</p>
+      <ion-button routerLink="/agregar" color="primary">
+        Crear Perfil
+      </ion-button>
     </div>
-    <div *ngIf="usuarioSeleccionado" class="user-nutrition-summary">
-      <ion-card class="summary-card">
-        <ion-card-header>
-          <ion-card-title>Recomendación para {{ usuarioSeleccionado.nombre }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <div class="calories-display">
-            <div class="calorie-item">
-              <span class="label">Calorías Diarias:</span>
-              <span class="value">{{ calcularCaloriasPersonalizadas(2500, usuarioSeleccionado) }} kcal</span>
+
+    <div *ngIf="usuarioSeleccionado">
+      <div class="section-title">
+        <h2>Planes Nutricionales</h2>
+        <span class="badge-count">{{ planesNutricionales.length }}</span>
+      </div>
+
+      <div class="cards-grid">
+        <ion-card *ngFor="let plan of planesNutricionales" class="content-card nutrition-card">
+          <div class="card-body">
+            <div class="nutrition-header">
+              <h3>{{ plan.titulo }}</h3>
+              <span class="calories-badge">
+                <ion-icon name="flame"></ion-icon>
+                {{ calcularCaloriasPersonalizadas(plan.calorias, usuarioSeleccionado) }} cal
+              </span>
             </div>
-            <div class="macros-row">
+            <p class="card-desc">{{ plan.descripcion }}</p>
+            
+            <div class="macros-grid">
               <div class="macro-item">
-                <span class="label">Proteínas:</span>
-                <span class="value">{{ calcularMacronutrientes(usuarioSeleccionado).proteinas.toFixed(0) }}g</span>
+                <div class="macro-icon protein">
+                  <ion-icon name="fitness-outline"></ion-icon>
+                </div>
+                <span class="macro-value">{{ plan.proteinas }}g</span>
+                <span class="macro-label">Proteína</span>
               </div>
               <div class="macro-item">
-                <span class="label">Carbohidratos:</span>
-                <span class="value">{{ calcularMacronutrientes(usuarioSeleccionado).carbohidratos.toFixed(0) }}g</span>
+                <div class="macro-icon carbs">
+                  <ion-icon name="leaf-outline"></ion-icon>
+                </div>
+                <span class="macro-value">{{ plan.carbohidratos }}g</span>
+                <span class="macro-label">Carbos</span>
               </div>
               <div class="macro-item">
-                <span class="label">Grasas:</span>
-                <span class="value">{{ calcularMacronutrientes(usuarioSeleccionado).grasas.toFixed(0) }}g</span>
+                <div class="macro-icon fats">
+                  <ion-icon name="water-outline"></ion-icon>
+                </div>
+                <span class="macro-value">{{ plan.grasas }}g</span>
+                <span class="macro-label">Grasas</span>
               </div>
+            </div>
+
+            <div class="card-footer">
+              <span class="time-info">
+                <ion-icon name="timer-outline"></ion-icon>
+                {{ plan.tiempo }} min prep
+              </span>
+              <ion-button fill="clear" size="small">
+                Ver Receta
+                <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+              </ion-button>
             </div>
           </div>
-        </ion-card-content>
-      </ion-card>
-    </div>
-    <div class="modern-grid">
-      <ion-card *ngFor="let plan of planesNutricionales" class="modern-card">
-        <div class="card-image-container">
-          <img [src]="plan.imagen" [alt]="plan.titulo"/>
-          <div class="category-tag">{{ plan.categoria }}</div>
-        </div>
-        <ion-card-header>
-          <ion-card-title>{{ plan.titulo }}</ion-card-title>
-          <ion-card-subtitle *ngIf="usuarioSeleccionado">
-            {{ calcularCaloriasPersonalizadas(plan.calorias, usuarioSeleccionado) }} kcal | {{ plan.tiempo }} min prep.
-          </ion-card-subtitle>
-          <ion-card-subtitle *ngIf="!usuarioSeleccionado">
-            {{ plan.calorias }} kcal | {{ plan.tiempo }} min prep.
-          </ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <p class="card-description">{{ plan.descripcion }}</p>
-          <div class="nutrients-info">
-            <span><ion-icon name="flash-outline"></ion-icon> 
-              <span *ngIf="usuarioSeleccionado">{{ (plan.proteinas * (calcularMacronutrientes(usuarioSeleccionado).proteinas / 100)).toFixed(0) }}g</span>
-              <span *ngIf="!usuarioSeleccionado">{{ plan.proteinas }}g</span> proteínas
-            </span>
-            <span><ion-icon name="flame-outline"></ion-icon> 
-              <span *ngIf="usuarioSeleccionado">{{ (plan.carbohidratos * (calcularMacronutrientes(usuarioSeleccionado).carbohidratos / 100)).toFixed(0) }}g</span>
-              <span *ngIf="!usuarioSeleccionado">{{ plan.carbohidratos }}g</span> carbs
-            </span>
-            <span><ion-icon name="water-outline"></ion-icon> 
-              <span *ngIf="usuarioSeleccionado">{{ (plan.grasas * (calcularMacronutrientes(usuarioSeleccionado).grasas / 100)).toFixed(0) }}g</span>
-              <span *ngIf="!usuarioSeleccionado">{{ plan.grasas }}g</span> grasas
-            </span>
-          </div>
-        </ion-card-content>
-      </ion-card>
+        </ion-card>
+      </div>
     </div>
   </div>
 
   <!-- Sección de Ejercicio -->
-  <div *ngIf="selectedSegment === 'ejercicio'" class="segment-content">
-    <h2 class="section-title">Rutinas de Entrenamiento</h2>
-    <div *ngIf="!usuarioSeleccionado" class="no-user-message">
-      <ion-icon name="person-add-outline"></ion-icon>
-      <p>Por favor, crea un usuario en la sección "Agregar" para ver recomendaciones personalizadas.</p>
+  <div *ngIf="selectedSegment === 'ejercicio'" class="content-section">
+    <div class="section-title">
+      <h2>Rutinas de Ejercicio</h2>
+      <span class="badge-count">{{ rutinasEjercicio.length }}</span>
     </div>
-    <div *ngIf="usuarioSeleccionado" class="user-exercise-recommendation">
-      <ion-card class="recommendation-card">
-        <ion-card-header>
-          <ion-card-title>Recomendación para {{ usuarioSeleccionado.nombre }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <div class="recommendation-box">
-            <p class="recommendation-text">{{ obtenerRecomendacionEjercicio(usuarioSeleccionado) }}</p>
-            <div class="imc-info">
-              <span>IMC: {{ (usuarioSeleccionado.peso / ((usuarioSeleccionado.estatura / 100) * (usuarioSeleccionado.estatura / 100))).toFixed(1) }}</span>
+
+    <div class="cards-grid">
+      <ion-card *ngFor="let rutina of rutinasEjercicio" class="content-card exercise-card">
+        <div class="card-image">
+          <img 
+            [src]="rutina.imagen" 
+            [alt]="rutina.nombre"
+            (error)="onImageError($event)"
+          />
+          <div class="intensity-badge" [class]="rutina.intensidad.toLowerCase()">
+            {{ rutina.intensidad }}
+          </div>
+        </div>
+        <div class="card-body">
+          <h3>{{ rutina.nombre }}</h3>
+          <span class="routine-type">{{ rutina.tipo }}</span>
+          <p class="card-desc">{{ rutina.descripcion }}</p>
+          
+          <div class="routine-stats">
+            <div class="stat">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>{{ rutina.duracion }} min</span>
+            </div>
+            <div class="stat">
+              <ion-icon name="flame-outline"></ion-icon>
+              <span>{{ rutina.calorias }} cal</span>
+            </div>
+            <div class="stat">
+              <ion-icon name="barbell-outline"></ion-icon>
+              <span>{{ rutina.ejercicios }} ejercicios</span>
             </div>
           </div>
-        </ion-card-content>
-      </ion-card>
-    </div>
-    <div class="modern-grid">
-      <ion-card *ngFor="let rutina of rutinasEjercicio" class="modern-card">
-        <div class="card-image-container">
-          <img [src]="rutina.imagen" [alt]="rutina.nombre"/>
-          <div class="duration-badge">{{ rutina.duracion }} min</div>
-        </div>
-        <ion-card-header>
-          <ion-card-title>{{ rutina.nombre }}</ion-card-title>
-          <ion-card-subtitle>{{ rutina.intensidad }} | {{ rutina.tipo }}</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <p class="card-description">{{ rutina.descripcion }}</p>
-          <div class="workout-stats">
-            <span><ion-icon name="flame-outline"></ion-icon> 
-              <span *ngIf="usuarioSeleccionado">{{ (rutina.calorias * (usuarioSeleccionado.peso / 70)).toFixed(0) }} kcal</span>
-              <span *ngIf="!usuarioSeleccionado">{{ rutina.calorias }} kcal</span>
-            </span>
-            <span><ion-icon name="fitness-outline"></ion-icon> {{ rutina.ejercicios }} ejercicios</span>
-          </div>
-          <ion-button expand="block" fill="clear" class="start-workout-btn" (click)="iniciarRutina(rutina)">
-            Comenzar entrenamiento
-            <ion-icon name="play-outline" slot="end"></ion-icon>
+
+          <ion-button 
+            expand="block" 
+            class="start-routine-btn"
+            (click)="iniciarRutina(rutina)">
+            <ion-icon name="play-outline" slot="start"></ion-icon>
+            Iniciar Rutina
           </ion-button>
-        </ion-card-content>
+        </div>
       </ion-card>
     </div>
   </div>

@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Subir Imágenes a Spring Boot</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Capturar o Seleccionar Imagen</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" (click)="takePicture()">
+        📷 Tomar Foto
+      </ion-button>
+      <ion-button expand="block" (click)="selectFromGallery()">
+        🖼️ Seleccionar de Galería
+      </ion-button>
+
+      <div *ngIf="selectedImage" style="margin-top: 20px; text-align: center;">
+        <h3>Vista Previa:</h3>
+        <ion-img [src]="selectedImage" style="max-width: 100%; height: auto;"></ion-img>
+        <ion-button expand="block" color="success" (click)="uploadImage()" [disabled]="isLoading">
+          ⬆️ Subir al Servidor Spring Boot
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Imágenes en el Servidor</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" (click)="loadImages()" [disabled]="isLoading">
+        🔄 Cargar Imágenes
+      </ion-button>
+
+      <div *ngIf="isLoading" style="text-align: center; margin: 20px;">
+        <ion-spinner></ion-spinner>
+        <p>Cargando...</p>
+      </div>
+
+      <ion-list *ngIf="!isLoading && uploadedImages.length > 0">
+        <ion-item *ngFor="let image of uploadedImages">
+          <ion-label>
+            <h2>{{ image.name || 'Imagen' }}</h2>
+            <p>ID: {{ image.id }}</p>
+          </ion-label>
+          <ion-button slot="end" color="danger" (click)="deleteImage(image.id)">
+            🗑️ Eliminar
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <div *ngIf="!isLoading && uploadedImages.length === 0" style="text-align: center; padding: 20px;">
+        <p>No hay imágenes en el servidor</p>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-alert
+    [isOpen]="showAlert"
+    [message]="alertMessage"
+    [buttons]="['OK']"
+    (didDismiss)="showAlert = false">
+  </ion-alert>
+</ion-content>
