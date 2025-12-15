@@ -31,7 +31,25 @@ import {
   flameOutline, 
   waterOutline, 
   fitnessOutline, 
-  playOutline, personCircleOutline, personAddOutline, schoolOutline, checkmarkCircleOutline, rocketOutline, calendarOutline, scaleOutline, resizeOutline, analyticsOutline, timeOutline, leafOutline, timerOutline, checkmarkDoneOutline, cameraOutline } from 'ionicons/icons';
+  playOutline, 
+  personCircleOutline, 
+  personAddOutline, 
+  schoolOutline, 
+  checkmarkCircleOutline, 
+  rocketOutline, 
+  calendarOutline, 
+  scaleOutline, 
+  resizeOutline, 
+  analyticsOutline, 
+  timeOutline, 
+  leafOutline, 
+  timerOutline, 
+  checkmarkDoneOutline, 
+  cameraOutline, 
+  handLeftOutline,
+  personCircle,
+  flame
+} from 'ionicons/icons';
 
 interface Usuario {
   nombre: string;
@@ -199,7 +217,7 @@ export class HomePage implements OnInit, OnDestroy {
   ];
 
   constructor(private router: Router) {
-    addIcons({cameraOutline,checkmarkDoneOutline,barbellOutline,personAddOutline,personCircle,fitnessOutline,calendarOutline,scaleOutline,resizeOutline,analyticsOutline,trophyOutline,nutritionOutline,timeOutline,flameOutline,arrowForwardOutline,flame,leafOutline,waterOutline,timerOutline,playOutline,personCircleOutline,rocketOutline,flashOutline,schoolOutline,checkmarkCircleOutline});
+    addIcons({handLeftOutline,cameraOutline,checkmarkDoneOutline,barbellOutline,personAddOutline,personCircle,fitnessOutline,calendarOutline,scaleOutline,resizeOutline,analyticsOutline,trophyOutline,nutritionOutline,timeOutline,flameOutline,arrowForwardOutline,flame,leafOutline,waterOutline,timerOutline,playOutline,personCircleOutline,rocketOutline,flashOutline,schoolOutline,checkmarkCircleOutline});
   }
 
   ngOnInit() {

@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Saludo Personalizado</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="saludo-container">
+    <!-- Encabezado -->
+    <div class="header-section">
+      <ion-icon name="hand-left-outline" color="primary"></ion-icon>
+      <h2>¡Conecta con Spring Boot!</h2>
+      <p>Ingresa tu nombre y recibe un saludo desde el servidor</p>
+    </div>
+
+    <!-- Formulario -->
+    <ion-card>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-input
+            [(ngModel)]="nombre"
+            label="Tu nombre"
+            labelPlacement="floating"
+            placeholder="Escribe tu nombre aquí"
+            [clearInput]="true"
+          ></ion-input>
+        </ion-item>
+
+        <div class="buttons-container">
+          <ion-button 
+            expand="block" 
+            (click)="obtenerSaludo()"
+            [disabled]="loading || !nombre.trim()"
+          >
+            <ion-icon slot="start" name="paper-plane-outline"></ion-icon>
+            {{ loading ? 'Conectando...' : 'Saludar' }}
+          </ion-button>
+
+          <ion-button 
+            expand="block" 
+            fill="outline" 
+            color="medium"
+            (click)="limpiar()"
+            [disabled]="loading"
+          >
+            <ion-icon slot="start" name="refresh-outline"></ion-icon>
+            Limpiar
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Respuesta del servidor -->
+    <ion-card *ngIf="respuesta" class="response-card">
+      <ion-card-header>
+        <ion-card-title color="success">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          Respuesta del Servidor
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="response-item">
+          <ion-icon name="chatbubble-ellipses-outline" color="primary"></ion-icon>
+          <div>
+            <strong>Mensaje:</strong>
+            <p>{{ respuesta.mensaje }}</p>
+          </div>
+        </div>
+        <div class="response-item" *ngIf="respuesta.fecha">
+          <ion-icon name="calendar-outline" color="tertiary"></ion-icon>
+          <div>
+            <strong>Fecha:</strong>
+            <p>{{ respuesta.fecha }}</p>
+          </div>
+        </div>
+        <div class="response-item" *ngIf="respuesta.status">
+          <ion-icon name="information-circle-outline" color="success"></ion-icon>
+          <div>
+            <strong>Estado:</strong>
+            <p>{{ respuesta.status }}</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Mensaje de error -->
+    <ion-card *ngIf="error" color="danger" class="error-card">
+      <ion-card-content>
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <p>{{ error }}</p>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Spinner de carga -->
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Conectando con Spring Boot...</p>
+    </div>
+  </div>
+</ion-content>

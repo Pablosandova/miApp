@@ -41,6 +41,10 @@ export const routes: Routes = [
   {
     path: 'upload-image',
     loadComponent: () => import('../pages/upload-image/upload-image.page').then(m => m.UploadImagePage)
+  },
+  {
+    path: 'saludo',
+    loadComponent: () => import('../pages/saludo/saludo.page').then(m => m.SaludoPage)
   }
 
 

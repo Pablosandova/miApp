@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  // 🔥 URL usando IP local (funciona si estás en la misma red WiFi)
+  // 🔥 URL usando IP local (funciona desde el navegador y dispositivos en la misma red)
   private apiUrl = 'http://192.168.100.49:8080/api';
 
   constructor(private http: HttpClient) { }
@@ -63,5 +63,14 @@ export class ApiService {
    */
   getApiUrl(): string {
     return this.apiUrl;
+  }
+
+  /**
+   * Obtener saludo personalizado del servidor
+   * @param nombre - Nombre de la persona
+   * @returns Observable con el mensaje de saludo
+   */
+  getSaludo(nombre: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/saludo/${nombre}`);
   }
 }
